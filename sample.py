@@ -2,6 +2,7 @@ import tensorflow as tf
 import random
 import model
 
+
 def top_k_logits(logits, k):
     if k == 0:
         # no truncation
@@ -15,11 +16,13 @@ def top_k_logits(logits, k):
             tf.ones_like(logits, dtype=logits.dtype) * -1e10,
             logits,
         )
+
     return tf.cond(
-       tf.equal(k, 0),
-       lambda: logits,
-       lambda: _top_k(),
+        tf.equal(k, 0),
+        lambda: logits,
+        lambda: _top_k(),
     )
+
 
 def top_p_logits(logits, p):
     with tf.variable_scope('top_p_logits'):
@@ -29,8 +32,8 @@ def top_p_logits(logits, p):
         probs_sort = tf.nn.softmax(logits_sort)
         probs_sums = tf.cumsum(probs_sort, axis=1, exclusive=True)
 
-        logits_masked = tf.where(probs_sums < p, logits_sort, tf.ones_like(logits_sort)*1000) # [batchsize, vocab]
-        min_logits = tf.reduce_min(logits_masked, axis=1, keepdims=True) # [batchsize, 1]
+        logits_masked = tf.where(probs_sums < p, logits_sort, tf.ones_like(logits_sort) * 1000)  # [batchsize, vocab]
+        min_logits = tf.reduce_min(logits_masked, axis=1, keepdims=True)  # [batchsize, 1]
         return tf.where(
             logits < min_logits,
             tf.ones_like(logits, dtype=logits.dtype) * -1e10,
@@ -38,7 +41,8 @@ def top_p_logits(logits, p):
         )
 
 
-def sample_sequence(*, hparams, length, start_token=None, batch_size=None, context=None, temperature=1, top_k=0, top_p=0):
+def sample_sequence(*, hparams, length, start_token=None, batch_size=None, context=None, temperature=1, top_k=0,
+                    top_p=0):
     if start_token is None:
         assert context is not None, 'Specify exactly one of start_token and context!'
     else:
@@ -62,19 +66,21 @@ def sample_sequence(*, hparams, length, start_token=None, batch_size=None, conte
             # print(tf.unstack(next_outputs['logits'][:, -1, :] ))
 
             if temperature == 0:
-                logits = tf.map_fn(fn=lambda logit_tensor: logit_tensor / tf.random.uniform((1,), minval=.69, maxval=.91, dtype=tf.dtypes.float32),
+                logits = tf.map_fn(
+                    fn=lambda logit_tensor: logit_tensor / tf.random.uniform((1,), minval=.69, maxval=.91,
+                                                                             dtype=tf.dtypes.float32),
                     elems=next_outputs['logits'][:, -1, :],
                     back_prop=False,
                     dtype=tf.float32)
-            else: 
-                logits = next_outputs['logits'][:, -1, :]  / tf.to_float(temperature)
+            else:
+                logits = next_outputs['logits'][:, -1, :] / tf.to_float(temperature)
 
             # logits = top_p_logits(logits, p=top_p)
             if top_p:
                 logits = top_p_logits(logits, p=top_p)
-            else: 
+            else:
                 logits = top_k_logits(logits, k=top_k)
-            
+
             samples = tf.multinomial(logits, num_samples=1, output_dtype=tf.int32)
             return [
                 next_outputs['presents'] if past is None else tf.concat([past, next_outputs['presents']], axis=-2),
