@@ -26,7 +26,7 @@ def top_k_logits(logits, k):
 
 def top_p_logits(logits, p):
     with tf.variable_scope('top_p_logits'):
-        logits_sort = tf.sort(logits, direction='DESCENDING')
+        logits_sort = tf.contrib.framework.sort(logits, direction='DESCENDING')
 
         # logits_sort = (logits_sort[i,:] for i in range(logits_sort.get_shape().as_list()[0]))
         probs_sort = tf.nn.softmax(logits_sort)
@@ -67,8 +67,8 @@ def sample_sequence(*, hparams, length, start_token=None, batch_size=None, conte
 
             if temperature == 0:
                 logits = tf.map_fn(
-                    fn=lambda logit_tensor: logit_tensor / tf.random.uniform((1,), minval=.69, maxval=.91,
-                                                                             dtype=tf.dtypes.float32),
+                    fn=lambda logit_tensor: logit_tensor / tf.random_uniform((1,), minval=.69, maxval=.91,
+                                                                             dtype=tf.float32),
                     elems=next_outputs['logits'][:, -1, :],
                     back_prop=False,
                     dtype=tf.float32)
