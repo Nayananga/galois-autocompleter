@@ -1,14 +1,16 @@
 import json
 import os
+
 import numpy as np
+import tensorflow as tf
+from flask import Flask, request, Response
+from flask_restful import Api, Resource
+
+import encoder
+import model
+import sample
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import tensorflow as tf
-from flask import Flask, jsonify, request, Response
-from flask_restful import reqparse, abort, Api, Resource
-
-import model, sample, encoder
-
 os.environ["KMP_BLOCKTIME"] = "1"
 os.environ["KMP_SETTINGS"] = "1"
 os.environ["KMP_AFFINITY"] = "granularity=fine,verbose,compact,1,0"
