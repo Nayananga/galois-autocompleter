@@ -1,13 +1,3 @@
-
-<h1 align="center"><img src="img/logo.png" alt="Galois Autocompleter"/><p>Galois Autocompleter</p></h1>
-
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://twitter.com/iedmrc">
-    <img alt="Twitter: iedmrc" src="https://img.shields.io/twitter/follow/iedmrc.svg?style=social" target="_blank" />
-  </a>
-</p>
-
 > An autocompleter for code editors based on [OpenAI GPT-2](https://github.com/openai/gpt-2).
 
 ### 🏠 [Homepage](https://usegalois.com)
@@ -50,8 +40,12 @@ pip3 install -r requirements.txt
 P.S.: Be sure that you have tensorflow version >= 1.13
 
 Run the autocompleter:
-```sh
+```
 python3 main.py
+```
+or easily run,
+```
+python interactive_conditional_samples.py
 ```
 
 ## Usage
@@ -89,9 +83,6 @@ Contributions are welcome. Feel free to create an issue or a pull request.
 ## Author
 
 👤 **Ibrahim Ethem DEMIRCI**
-
-Twitter: [@iedmrc](https://twitter.com/iedmrc) | Github: [@iedmrc](https://github.com/iedmrc) | Patreon: [@iedmrc](https://patreon.com/iedmrc)
-
 
 Ibrahim's open-source projects are supported by his Patreon. If you found this project helpful, any monetary contributions to the Patreon are appreciated and will be put to good creative use.
 

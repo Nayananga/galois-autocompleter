@@ -16,8 +16,18 @@ os.environ["KMP_SETTINGS"] = "1"
 os.environ["KMP_AFFINITY"] = "granularity=fine,verbose,compact,1,0"
 
 
-def interact_model(model_name='model', seed=99, nsamples=5, batch_size=5,
-                   length=8, temperature=0, top_k=10, top_p=.85, models_dir='galois-autocompleter'):
+def interact_model(
+        model_name='model',
+        seed=99,
+        nsamples=5,
+        batch_size=5,
+        length=8,
+        temperature=0,
+        top_k=10,
+        top_p=.85,
+        models_dir='galois-autocompleter'
+):
+
     models_dir = os.path.expanduser(os.path.expandvars(models_dir))
 
     if batch_size is None:
